@@ -8,7 +8,7 @@ export const styles = StyleSheet.create({
   },
   container: {
     padding: 8,
-    justifyContent: 'center',
+    alignItems: 'center',
   },
   font: {
     fontFamily: theme.fonts.regular,

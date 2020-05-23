@@ -1,15 +1,38 @@
 import {Avatar} from 'react-native-paper';
 import {styles} from './styles';
-import {View, Text} from 'react-native';
+import {View, Text, Image} from 'react-native';
 import React from 'react';
-import Image from 'react-native-scalable-image';
+import imageCacheHoc from 'react-native-image-cache-hoc';
+import theme from '../../themes/default';
+
+const CacheableImage = imageCacheHoc(Image, {
+  validProtocols: ['http', 'https'],
+});
 
 const RoundedImage = ({...props}) => {
   const {image, size = 120} = props;
 
-  let picture = <Text>?</Text>;
+  let picture = (
+    <View
+      style={{
+        width: 85,
+        height: 120,
+        borderRadius: 16,
+        backgroundColor: theme.colors.white,
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}>
+      <Text>No Image</Text>
+    </View>
+  );
   if (image) {
-    picture = <Image height={size} source={{uri: image}} />;
+    picture = (
+      <CacheableImage
+        style={{width: 85, height: 120, borderRadius: 16}}
+        source={{uri: image}}
+        permanent={false}
+      />
+    );
   }
   return (
     <View style={[styles.container, {...props}]}>

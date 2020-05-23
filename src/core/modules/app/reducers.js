@@ -5,21 +5,31 @@ export const appInitialState = {
 };
 
 export const actionsTypes = {
+  CLEAR_CONTENT: 'app/clear_content',
+  REQUEST_ERROR: 'app/request_error',
+  REQUEST_PENDING: 'app/request_pending',
   REQUEST_PAGE_SUCCESS: 'app/request_page_success',
-  REQUEST_PAGE_ERROR: 'app/request_page_error',
-  REQUEST_PAGE_PENDING: 'app/request_page_pending',
+  REQUEST_SEARCH_SUCCESS: 'app/request_search_success',
 };
 
 export default (state, {type, payload}) => {
   switch (type) {
-    case actionsTypes.REQUEST_PAGE_PENDING: {
+    case actionsTypes.CLEAR_CONTENT: {
+      return {
+        ...state,
+        content: [],
+        error: null,
+      };
+    }
+    case actionsTypes.REQUEST_PENDING: {
       return {
         ...state,
         loading: true,
       };
     }
     case actionsTypes.REQUEST_PAGE_SUCCESS: {
-      let newContent = Object.assign(state.content, payload);
+      let deDupeIt = (...arrs) => [...new Set([].concat(...arrs))];
+      let newContent = deDupeIt(state.content, payload);
       return {
         ...state,
         content: newContent,
@@ -27,7 +37,15 @@ export default (state, {type, payload}) => {
         loading: false,
       };
     }
-    case actionsTypes.REQUEST_PAGE_ERROR: {
+    case actionsTypes.REQUEST_SEARCH_SUCCESS: {
+      return {
+        ...state,
+        content: payload,
+        error: null,
+        loading: false,
+      };
+    }
+    case actionsTypes.REQUEST_ERROR: {
       return {
         ...state,
         error: 'Something went wrong.',
