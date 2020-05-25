@@ -9,8 +9,10 @@ import theme from './themes/default';
 import Login from './pages/Login';
 import AnimatedTabBar from 'curved-bottom-navigation-bar';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
+import Details from './pages/Details';
 
 const Stack = createStackNavigator();
+const MovieStack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 const tabs = {
@@ -54,10 +56,36 @@ function bottomRoutes() {
           borderTopWidth: 0,
         },
       }}>
-      <Tab.Screen name="Home" component={Home} />
+      <Tab.Screen name="Home" component={homeStack} />
       <Tab.Screen name="Search" component={Home} />
       <Tab.Screen name="Favorites" component={Home} />
     </Tab.Navigator>
+  );
+}
+
+function homeStack() {
+  return (
+    <MovieStack.Navigator initialRouteName="Home">
+      <MovieStack.Screen
+        name="Home"
+        component={Home}
+        options={{headerShown: false}}
+      />
+      <MovieStack.Screen
+        name="Details"
+        component={Details}
+        options={{
+          headerStyle: {
+            borderBottomWidth: 0,
+            backgroundColor: 'rgba(0,0,0,0)',
+            elevation: 0,
+          },
+          headerTransparent: true,
+          headerTintColor: '#000',
+          title: '',
+        }}
+      />
+    </MovieStack.Navigator>
   );
 }
 

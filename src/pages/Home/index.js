@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import {useContext} from '../../core/_root';
-import {FlatList, TouchableOpacity, View} from 'react-native';
+import {BackHandler, View} from 'react-native';
 import {styles} from './styles';
-import MovieItem from '../../components/MovieItem';
 import theme from '../../themes/default';
-import {ActivityIndicator, Searchbar} from 'react-native-paper';
+import {Searchbar} from 'react-native-paper';
+import MovieList from '../../components/MovieList';
 
 const Home = ({navigation}) => {
   const {state, actions} = useContext();
@@ -18,7 +18,13 @@ const Home = ({navigation}) => {
       console.log(`Loading page: ${currentPage}`);
       setCurrentPage(1);
     }
-  }, [actions.app, currentPage, searchTerm]);
+  }, [
+    actions.app,
+    currentPage,
+    searchTerm,
+    state.app.clean,
+    state.app.loading,
+  ]);
 
   const requestPage = () => {
     if (!state.app.loading && searchTerm == '') {
@@ -48,20 +54,10 @@ const Home = ({navigation}) => {
     setTimer(setTimeout(() => requestSearch(term), 1000));
   };
 
-  const onRefresh = () => {
-    requestPage();
-  };
-
-  const renderFooter = () => {
-    return state.app.content.length == 0 ? (
-      <ActivityIndicator
-        style={{marginBottom: 32}}
-        animating={true}
-        color={theme.colors.red_primary}
-      />
-    ) : (
-      <View style={{margin: 72}} />
-    );
+  const goToDetails = item => {
+    actions.app.cleanDetails();
+    console.log('Cleared Details');
+    navigation.navigate('Details', {item});
   };
 
   return (
@@ -78,32 +74,11 @@ const Home = ({navigation}) => {
         onChangeText={changeSearchTerm}
         value={searchTerm}
       />
-      <FlatList
-        showsHorizontalScrollIndicator={false}
-        data={state.app.content}
-        numColumns={2}
-        style={{backgroundColor: theme.colors.dark_background}}
-        contentInset={{paddingBottom: 80}}
-        ListFooterComponent={() => renderFooter()}
-        onEndReachedThreshold={0.5}
-        onEndReached={() => onRefresh()}
-        keyExtractor={item => `K${item.id}`}
-        renderItem={({item}) => (
-          <TouchableOpacity
-            style={{
-              flex: 0.5,
-              margin: 16,
-            }}
-            key={`TO-${item.id}`}
-            onPress={() => console.log(item.name)}>
-            <MovieItem
-              style={{alignSelf: 'center'}}
-              key={item.id}
-              title={item.name}
-              image={item.image != null && item.image.medium}
-            />
-          </TouchableOpacity>
-        )}
+      <MovieList
+        content={state.app.content}
+        loading={state.app.loading}
+        goToDetails={goToDetails}
+        requestPage={requestPage}
       />
     </View>
   );

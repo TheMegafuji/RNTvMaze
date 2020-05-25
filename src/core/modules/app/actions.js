@@ -77,4 +77,73 @@ export default dispatch => ({
       });
     }
   },
+  requestShow: async id => {
+    dispatch({
+      type: actionsTypes.REQUEST_PENDING,
+    });
+
+    try {
+      const netInfo = await NetInfo.fetch();
+
+      if (!netInfo.isConnected) {
+        console.log('No connection');
+        return null;
+      }
+      let show = await client.getShow(id);
+      if (!show) {
+        dispatch({
+          type: actionsTypes.REQUEST_ERROR,
+        });
+        return;
+      }
+
+      dispatch({
+        type: actionsTypes.REQUEST_SHOW_SUCCESS,
+        payload: show,
+      });
+    } catch (err) {
+      console.log('Exception');
+      console.log(err);
+      dispatch({
+        type: actionsTypes.REQUEST_ERROR,
+      });
+    }
+  },
+  cleanDetails: async => {
+    dispatch({
+      type: actionsTypes.CLEAR_DETAILS,
+    });
+  },
+  requestEpisodes: async id => {
+    dispatch({
+      type: actionsTypes.REQUEST_EPISODES_PENDING,
+    });
+
+    try {
+      const netInfo = await NetInfo.fetch();
+
+      if (!netInfo.isConnected) {
+        console.log('No connection');
+        return null;
+      }
+      let episodes = await client.getEpisodes(id);
+      if (!episodes) {
+        dispatch({
+          type: actionsTypes.REQUEST_EPISODES_ERROR,
+        });
+        return;
+      }
+
+      dispatch({
+        type: actionsTypes.REQUEST_EPISODES_SUCCESS,
+        payload: episodes,
+      });
+    } catch (err) {
+      console.log('Exception');
+      console.log(err);
+      dispatch({
+        type: actionsTypes.REQUEST_EPISODES_ERROR,
+      });
+    }
+  },
 });
