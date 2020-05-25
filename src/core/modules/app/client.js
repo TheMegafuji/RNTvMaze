@@ -23,6 +23,50 @@ const getPage = async pageNumber => {
     });
 };
 
+const getShow = async id => {
+  if (id == null) {
+    return Promise.reject(new Error('No id sent'));
+  }
+  const url = endpoints.SHOWS + `/${id}?embed=cast`;
+
+  return axios
+    .get(url, {}, {})
+    .then(async function(response) {
+      if (response.status >= 200 && response.status < 300) {
+        return response.data;
+      } else {
+        return Promise.reject({
+          status: response.status,
+        });
+      }
+    })
+    .catch(err => {
+      console.log(err);
+    });
+};
+
+const getEpisodes = async id => {
+  if (id == null) {
+    return Promise.reject(new Error('No id sent'));
+  }
+  const url = endpoints.SHOWS + `/${id}/episodes`;
+
+  return axios
+    .get(url, {}, {})
+    .then(async function(response) {
+      if (response.status >= 200 && response.status < 300) {
+        return response.data;
+      } else {
+        return Promise.reject({
+          status: response.status,
+        });
+      }
+    })
+    .catch(err => {
+      console.log(err);
+    });
+};
+
 const search = async searchTerm => {
   if (searchTerm == null) {
     return Promise.reject(new Error('No search term sent'));
@@ -49,6 +93,8 @@ const search = async searchTerm => {
 
 const client = {
   getPage,
+  getShow,
+  getEpisodes,
   search,
 };
 
