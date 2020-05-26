@@ -11,33 +11,37 @@ const SeasonList = ({episodes, seriesName, showDialog, setDialogContent}) => {
   const [changedCollapse, setChangedCollapse] = useState(false);
 
   useEffect(() => {
-    if (seasons.length == 0) {
-      let currentSeason = [];
-      let seasonList = [];
-      let currentSeasonIndex = episodes[0].season;
-      episodes.forEach(item => {
-        if (item.season == currentSeasonIndex) {
-          currentSeason.push(item);
-        } else {
-          let season = {};
-          let collapse = collapsed;
-          season.name = `Season ${currentSeasonIndex}`;
-          collapse[season.name] = true;
-          setCollapsed(collapsed);
-          season.episodes = currentSeason;
-          seasonList.push(season);
-          currentSeason = [];
-          currentSeasonIndex = item.season;
-        }
-      });
-      let season = {};
-      let collapse = collapsed;
-      season.name = `Season ${currentSeasonIndex}`;
-      collapse[season.name] = true;
-      setCollapsed(collapsed);
-      season.episodes = currentSeason;
-      seasonList.push(season);
-      setSeasons(seasonList);
+    try {
+      if (seasons.length == 0) {
+        let currentSeason = [];
+        let seasonList = [];
+        let currentSeasonIndex = episodes[0].season;
+        episodes.forEach(item => {
+          if (item.season == currentSeasonIndex) {
+            currentSeason.push(item);
+          } else {
+            let season = {};
+            let collapse = collapsed;
+            season.name = `Season ${currentSeasonIndex}`;
+            collapse[season.name] = true;
+            setCollapsed(collapsed);
+            season.episodes = currentSeason;
+            seasonList.push(season);
+            currentSeason = [];
+            currentSeasonIndex = item.season;
+          }
+        });
+        let season = {};
+        let collapse = collapsed;
+        season.name = `Season ${currentSeasonIndex}`;
+        collapse[season.name] = true;
+        setCollapsed(collapsed);
+        season.episodes = currentSeason;
+        seasonList.push(season);
+        setSeasons(seasonList);
+      }
+    } catch (e) {
+      console.log(e.toString());
     }
   }, [collapsed, episodes, seasons]);
 
@@ -72,6 +76,7 @@ const SeasonList = ({episodes, seriesName, showDialog, setDialogContent}) => {
             </TouchableOpacity>
             {!collapsed[item.name] && (
               <FlatList
+                scrollEnabled={false}
                 showsVerticalScrollIndicator={false}
                 data={item.episodes}
                 style={{backgroundColor: theme.colors.dark_background}}

@@ -10,9 +10,11 @@ import Login from './pages/Login';
 import AnimatedTabBar from 'curved-bottom-navigation-bar';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import Details from './pages/Details';
+import Favorites from './pages/Favorites';
 
 const Stack = createStackNavigator();
 const MovieStack = createStackNavigator();
+const FavoritesStack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 const tabs = {
@@ -58,7 +60,7 @@ function bottomRoutes() {
       }}>
       <Tab.Screen name="Home" component={homeStack} />
       <Tab.Screen name="Search" component={Home} />
-      <Tab.Screen name="Favorites" component={Home} />
+      <Tab.Screen name="Favorites" component={favoritesStack} />
     </Tab.Navigator>
   );
 }
@@ -86,6 +88,32 @@ function homeStack() {
         }}
       />
     </MovieStack.Navigator>
+  );
+}
+
+function favoritesStack() {
+  return (
+    <FavoritesStack.Navigator initialRouteName="Home">
+      <FavoritesStack.Screen
+        name="Favorites"
+        component={Favorites}
+        options={{headerShown: false}}
+      />
+      <FavoritesStack.Screen
+        name="Details"
+        component={Details}
+        options={{
+          headerStyle: {
+            borderBottomWidth: 0,
+            backgroundColor: 'rgba(0,0,0,0)',
+            elevation: 0,
+          },
+          headerTransparent: true,
+          headerTintColor: '#000',
+          title: '',
+        }}
+      />
+    </FavoritesStack.Navigator>
   );
 }
 
