@@ -1,6 +1,7 @@
 import {actionsTypes} from './reducers';
 import client from './client';
 import NetInfo from '@react-native-community/netinfo';
+import repository from './repository';
 
 export default dispatch => ({
   requestPage: async pageNumber => {
@@ -144,6 +145,70 @@ export default dispatch => ({
       dispatch({
         type: actionsTypes.REQUEST_EPISODES_ERROR,
       });
+    }
+  },
+  getFavorites: async () => {
+    dispatch({
+      type: actionsTypes.GET_FAVORITES_PENDING,
+    });
+    try {
+      let dbResponse = await repository.allMovies();
+      if (!dbResponse) {
+        console.log('Nothing in DB');
+        dispatch({
+          type: actionsTypes.GET_FAVORITES_ERROR,
+        });
+        return;
+      } else {
+        dispatch({
+          type: actionsTypes.GET_FAVORITES_SUCCESS,
+          payload: dbResponse,
+        });
+      }
+    } catch (err) {
+      console.log('Exception');
+      console.log(err);
+    }
+  },
+  saveFavorite: async (item, episodes, show) => {
+    try {
+      let dbInsert = null;
+      if (show == null) {
+        dbInsert = await repository.insertMovie(item, episodes);
+      } else {
+        dbInsert = await repository.insertMovie(show, episodes);
+      }
+      if (!dbInsert) {
+        console.log('Could not save in db');
+        return;
+      } else {
+        console.log(dbInsert);
+      }
+    } catch (err) {
+      console.log('Exception');
+      console.log(err);
+    }
+  },
+  deleteFavorite: async item => {
+    try {
+      await repository.removeMovie(item);
+      return null;
+    } catch (err) {
+      console.log('Exception');
+      console.log(err);
+    }
+  },
+  isFavorite: async id => {
+    try {
+      let dbResponse = await repository.getMovieById(id);
+      if (dbResponse.length == 0) {
+        return false;
+      } else {
+        return true;
+      }
+    } catch (err) {
+      console.log('Exception');
+      console.log(err);
     }
   },
 });

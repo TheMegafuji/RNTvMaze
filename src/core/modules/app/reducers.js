@@ -6,6 +6,8 @@ export const appInitialState = {
   show: null,
   error: null,
   clean: true,
+  favoritesLoading: false,
+  favorites: [],
 };
 
 export const actionsTypes = {
@@ -19,10 +21,22 @@ export const actionsTypes = {
   REQUEST_SEARCH_SUCCESS: 'app/request_search_success',
   REQUEST_SHOW_SUCCESS: 'app/request_show_success',
   REQUEST_EPISODES_SUCCESS: 'app/request_episodes_success',
+  CLEAR_FAVORITES: 'app/clear_favorites',
+  GET_FAVORITES_PENDING: 'app/get_favorites_pending',
+  GET_FAVORITES_ERROR: 'app/get_favorites_error',
+  GET_FAVORITES_SUCCESS: 'app/get_favorites_success',
 };
 
 export default (state, {type, payload}) => {
   switch (type) {
+    case actionsTypes.CLEAR_FAVORITES: {
+      return {
+        ...state,
+        favorites: [],
+        favoritesLoading: null,
+        error: null,
+      };
+    }
     case actionsTypes.CLEAR_CONTENT: {
       return {
         ...state,
@@ -44,6 +58,12 @@ export default (state, {type, payload}) => {
       return {
         ...state,
         loading: true,
+      };
+    }
+    case actionsTypes.GET_FAVORITES_PENDING: {
+      return {
+        ...state,
+        favoritesLoading: true,
       };
     }
     case actionsTypes.REQUEST_EPISODES_PENDING: {
@@ -88,6 +108,14 @@ export default (state, {type, payload}) => {
         episodesLoading: false,
       };
     }
+    case actionsTypes.GET_FAVORITES_SUCCESS: {
+      return {
+        ...state,
+        favorites: payload,
+        error: null,
+        favoritesLoading: false,
+      };
+    }
     case actionsTypes.REQUEST_ERROR: {
       return {
         ...state,
@@ -95,10 +123,17 @@ export default (state, {type, payload}) => {
         loading: false,
       };
     }
+    case actionsTypes.GET_FAVORITES_ERROR: {
+      return {
+        ...state,
+        error: 'Could not load favorites.',
+        favoritesLoading: false,
+      };
+    }
     case actionsTypes.REQUEST_EPISODES_ERROR: {
       return {
         ...state,
-        error: 'Something went wrong.',
+        error: 'Problem requesting episodes.',
         episodesLoading: false,
       };
     }

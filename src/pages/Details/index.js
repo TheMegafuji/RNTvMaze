@@ -15,6 +15,7 @@ import imageCacheHoc from 'react-native-image-cache-hoc';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import CastList from '../../components/CastList';
 import SeasonList from '../../components/SeasonList';
+import {useIsFocused} from '@react-navigation/native';
 
 const CacheableImage = imageCacheHoc(Image, {
   validProtocols: ['http', 'https'],
@@ -26,6 +27,35 @@ const Details = ({navigation, route}) => {
   const [collapse, setCollapse] = useState(false);
   const [showDialog, setShowDialog] = useState(false);
   const [dialogContent, setDialogContent] = useState(null);
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [loadOnFocus, setLoadOnFocus] = useState(false);
+  const [doNotCheck, setDoNotCheck] = useState(false);
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    const checkIsFavorite = async () => {
+      if (!doNotCheck) {
+        const exists = await actions.app.isFavorite(item.id);
+        console.log(`setIsFavorite ${exists}`);
+        await setIsFavorite(exists);
+        setHeader(exists);
+      }
+    };
+    if (isFocused) {
+      if (!loadOnFocus) {
+        setLoadOnFocus(true);
+        checkIsFavorite();
+      }
+    } else {
+      setLoadOnFocus(false);
+    }
+  }, [actions.app, doNotCheck, isFocused, item.id, loadOnFocus, setHeader]);
+
+  useEffect(() => {
+    if (!'offline' in item) {
+      item.offline = false;
+    }
+  }, [item]);
 
   useEffect(() => {
     if (!state.app.loading && state.app.show == null) {
@@ -43,6 +73,48 @@ const Details = ({navigation, route}) => {
     state.app.show,
   ]);
 
+  const setHeader = (exists = isFavorite) => {
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity onPress={() => callToggleFavorite(exists)}>
+          <Icon
+            name={exists ? 'favorite' : 'favorite-border'}
+            style={styles.headerIcon}
+            size={30}
+            color={theme.colors.white}
+          />
+        </TouchableOpacity>
+      ),
+    });
+  };
+
+  const toggleFavorite = () => {
+    callToggleFavorite(isFavorite);
+  };
+
+  const callToggleFavorite = async setFavorite => {
+    if (!setFavorite) {
+      if (state.app.loading) {
+        setTimeout(() => callToggleFavorite(setFavorite), 1000);
+      } else if (state.app.episodesLoading) {
+        setTimeout(() => callToggleFavorite(setFavorite), 1000);
+      } else {
+        await actions.app.saveFavorite(
+          item,
+          state.app.episodes,
+          state.app.show,
+        );
+        setDoNotCheck(true);
+        setIsFavorite(true);
+        setHeader(true);
+      }
+    } else {
+      await actions.app.deleteFavorite(item);
+      setIsFavorite(false);
+      setHeader();
+    }
+  };
+
   useLayoutEffect(() => {
     navigation.setOptions({
       headerLeft: () => (
@@ -56,9 +128,9 @@ const Details = ({navigation, route}) => {
         </TouchableOpacity>
       ),
       headerRight: () => (
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity onPress={() => toggleFavorite()}>
           <Icon
-            name={'favorite'}
+            name={isFavorite ? 'favorite' : 'favorite-border'}
             style={styles.headerIcon}
             size={30}
             color={theme.colors.white}
@@ -66,7 +138,7 @@ const Details = ({navigation, route}) => {
         </TouchableOpacity>
       ),
     });
-  }, [navigation]);
+  }, [isFavorite, navigation, toggleFavorite]);
 
   return (
     <View style={styles.container}>
@@ -112,16 +184,20 @@ const Details = ({navigation, route}) => {
             />
           </TouchableOpacity>
           <Text style={styles.header}>Cast</Text>
-          {state.app.loading ? (
+          {(state.app.loading && !item.offline) ||
+          (!('embedded' in item) && item.offline) ? (
             <ActivityIndicator
               animating={true}
               style={{margin: 16}}
               color={theme.colors.red_primary}
             />
           ) : (
-            state.app.show && <CastList show={state.app.show} />
+            (state.app.show || item.offline) && (
+              <CastList show={item.offline ? item : state.app.show} />
+            )
           )}
-          {state.app.episodesLoading ? (
+          {(state.app.episodesLoading && !item.offline) ||
+          (!('seasons' in item) && item.offline) ? (
             <View>
               <Text style={styles.header}>Seasons</Text>
               <ActivityIndicator
@@ -131,12 +207,16 @@ const Details = ({navigation, route}) => {
               />
             </View>
           ) : (
-            state.app.episodes && (
+            (state.app.episodes || item.offline) && (
               <SeasonList
                 setDialogContent={setDialogContent}
                 showDialog={setShowDialog}
                 seriesName={item.name}
-                episodes={state.app.episodes}
+                episodes={
+                  item.offline && 'seasons' in item
+                    ? item.seasons
+                    : state.app.episodes
+                }
               />
             )
           )}

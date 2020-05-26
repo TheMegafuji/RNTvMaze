@@ -9,7 +9,7 @@ const CastList = ({show}) => {
       style={{marginLeft: 16}}
       horizontal={true}
       showsHorizontalScrollIndicator={false}
-      data={show._embedded.cast}
+      data={show.offline ? show.embedded.cast : show._embedded.cast}
       renderItem={({item}) => {
         return (
           <View style={styles.avatarView}>
