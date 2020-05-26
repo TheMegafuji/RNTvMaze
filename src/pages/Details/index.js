@@ -1,21 +1,13 @@
-import React, {useEffect, useState, useLayoutEffect} from 'react';
+import React, {useEffect, useLayoutEffect, useState} from 'react';
 import {useContext} from '../../core/_root';
-import {
-  FlatList,
-  Image,
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {Image, Text, TouchableOpacity, View} from 'react-native';
 import {styles} from './styles';
 import theme from '../../themes/default';
-import {ActivityIndicator, Dialog, Paragraph, Button} from 'react-native-paper';
 import imageCacheHoc from 'react-native-image-cache-hoc';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import CastList from '../../components/CastList';
-import SeasonList from '../../components/SeasonList';
 import {useIsFocused} from '@react-navigation/native';
+import DetailDialog from '../../components/DetailDialog';
+import DetailsBody from '../../components/DetailsBody';
 
 const CacheableImage = imageCacheHoc(Image, {
   validProtocols: ['http', 'https'],
@@ -30,6 +22,7 @@ const Details = ({navigation, route}) => {
   const [isFavorite, setIsFavorite] = useState(false);
   const [loadOnFocus, setLoadOnFocus] = useState(false);
   const [doNotCheck, setDoNotCheck] = useState(false);
+  const [keepOffline, setKeepOffline] = useState(true);
   const isFocused = useIsFocused();
 
   useEffect(() => {
@@ -88,6 +81,11 @@ const Details = ({navigation, route}) => {
     });
   };
 
+  const goToCast = item => {
+    actions.people.clearDetails();
+    navigation.navigate('PeopleDetails', {item});
+  };
+
   const toggleFavorite = () => {
     callToggleFavorite(isFavorite);
   };
@@ -111,7 +109,7 @@ const Details = ({navigation, route}) => {
     } else {
       await actions.app.deleteFavorite(item);
       setIsFavorite(false);
-      setHeader();
+      setHeader(false);
     }
   };
 
@@ -142,130 +140,48 @@ const Details = ({navigation, route}) => {
 
   return (
     <View style={styles.container}>
-      <CacheableImage
-        style={{zIndex: -1, position: 'absolute', width: '100%', height: '85%'}}
-        source={{uri: item.image.original}}
-        permanent={false}
-      />
-      <ScrollView
-        style={{
-          paddingTop: 300,
-          width: '100%',
-        }}>
-        <Text style={styles.movieTitle}>{item.name}</Text>
-        <Text style={styles.movieInfo}>{`${item.premiered.split('-')[0]} - ${
-          item.runtime
-        } per episode`}</Text>
-        <FlatList
-          style={{marginLeft: 16}}
-          horizontal={true}
-          data={item.genres}
-          renderItem={({item}) => <Text style={styles.genre}>{item}</Text>}
-          keyExtractor={index => index}
+      {item.image && item.image.original != null ? (
+        <CacheableImage
+          style={{
+            zIndex: -1,
+            position: 'absolute',
+            width: '100%',
+            height: '85%',
+          }}
+          source={{uri: item.image.original}}
+          permanent={false}
         />
+      ) : (
         <View
           style={{
-            paddingBottom: 500,
-            backgroundColor: theme.colors.dark_background,
-            borderRadius: 16,
+            zIndex: -1,
+            position: 'absolute',
+            width: '100%',
+            height: '50%',
+            backgroundColor: theme.colors.white,
+            alignItems: 'center',
+            justifyContent: 'center',
           }}>
-          <Text style={styles.header}>Summary</Text>
-          <Text numberOfLines={collapse ? 99 : 2} style={styles.summaryText}>
-            {item.summary.replace(/(&nbsp;|<([^>]+)>)/gi, '')}
+          <Text
+            style={[styles.movieTitle, {textColor: theme.colors.dark_primary}]}>
+            No Image
           </Text>
-          <TouchableOpacity
-            style={{alignItems: 'center'}}
-            onPress={() => setCollapse(!collapse)}>
-            <Icon
-              name={collapse ? 'expand-less' : 'expand-more'}
-              style={styles.headerIcon}
-              size={30}
-              color={theme.colors.white}
-            />
-          </TouchableOpacity>
-          <Text style={styles.header}>Cast</Text>
-          {(state.app.loading && !item.offline) ||
-          (!('embedded' in item) && item.offline) ? (
-            <ActivityIndicator
-              animating={true}
-              style={{margin: 16}}
-              color={theme.colors.red_primary}
-            />
-          ) : (
-            (state.app.show || item.offline) && (
-              <CastList show={item.offline ? item : state.app.show} />
-            )
-          )}
-          {(state.app.episodesLoading && !item.offline) ||
-          (!('seasons' in item) && item.offline) ? (
-            <View>
-              <Text style={styles.header}>Seasons</Text>
-              <ActivityIndicator
-                animating={true}
-                style={{margin: 16}}
-                color={theme.colors.red_primary}
-              />
-            </View>
-          ) : (
-            (state.app.episodes || item.offline) && (
-              <SeasonList
-                setDialogContent={setDialogContent}
-                showDialog={setShowDialog}
-                seriesName={item.name}
-                episodes={
-                  item.offline && 'seasons' in item
-                    ? item.seasons
-                    : state.app.episodes
-                }
-              />
-            )
-          )}
         </View>
-      </ScrollView>
-      <Dialog
-        style={{
-          backgroundColor: theme.colors.dark_background,
-          borderRadius: 16,
-          marginHorizontal: 48,
-        }}
-        visible={showDialog}
-        onDismiss={() => setShowDialog(false)}>
-        {dialogContent != null && (
-          <View>
-            <Image
-              style={{
-                width: '100%',
-                height: 200,
-                borderTopLeftRadius: 16,
-                borderTopRightRadius: 16,
-              }}
-              source={{uri: dialogContent.image.original}}
-            />
-            <Text style={styles.header}>{dialogContent.name}</Text>
-            <Text style={styles.dialogText}>
-              {`Season ${dialogContent.season} - Episode ${
-                dialogContent.number
-              }`}
-            </Text>
-            <Text style={styles.header}>Summary</Text>
-            <ScrollView>
-              <Text style={styles.dialogText}>
-                {dialogContent.summary.replace(/(&nbsp;|<([^>]+)>)/gi, '')}
-              </Text>
-            </ScrollView>
-          </View>
-        )}
-        <TouchableOpacity
-          style={styles.dialogButton}
-          onPress={() => setShowDialog(false)}>
-          <Icon
-            name={'clear'}
-            style={styles.headerIcon}
-            size={36}
-            color={theme.colors.white}
-          />
-        </TouchableOpacity>
-      </Dialog>
+      )}
+      <DetailsBody
+        goToCast={goToCast}
+        collapse={collapse}
+        setCollapse={setCollapse}
+        item={item}
+        app={state.app}
+        setShowDialog={setShowDialog}
+        setDialogContent={setDialogContent}
+      />
+      <DetailDialog
+        showDialog={showDialog}
+        setShowDialog={setShowDialog}
+        dialogContent={dialogContent}
+      />
     </View>
   );
 };

@@ -35,6 +35,7 @@ export default (state, {type, payload}) => {
         favorites: [],
         favoritesLoading: null,
         error: null,
+        loading: false,
       };
     }
     case actionsTypes.CLEAR_CONTENT: {
@@ -44,6 +45,7 @@ export default (state, {type, payload}) => {
         episodes: null,
         show: null,
         error: null,
+        loading: false,
       };
     }
     case actionsTypes.CLEAR_DETAILS: {
@@ -52,6 +54,7 @@ export default (state, {type, payload}) => {
         episodes: null,
         show: null,
         clean: true,
+        loading: false,
       };
     }
     case actionsTypes.REQUEST_PENDING: {

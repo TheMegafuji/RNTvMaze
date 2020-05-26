@@ -1,9 +1,9 @@
-import {FlatList, Text, View} from 'react-native';
+import {FlatList, Text, TouchableOpacity} from 'react-native';
 import {Avatar} from 'react-native-paper';
 import {styles} from './styles';
 import React from 'react';
 
-const CastList = ({show}) => {
+const CastList = ({goToCast, show}) => {
   return (
     <FlatList
       style={{marginLeft: 16}}
@@ -12,7 +12,9 @@ const CastList = ({show}) => {
       data={show.offline ? show.embedded.cast : show._embedded.cast}
       renderItem={({item}) => {
         return (
-          <View style={styles.avatarView}>
+          <TouchableOpacity
+            onPress={() => goToCast(item.person)}
+            style={styles.avatarView}>
             {item.person.image ? (
               <Avatar.Image
                 size={96}
@@ -22,7 +24,7 @@ const CastList = ({show}) => {
               <Avatar.Text size={96} label={'?'} />
             )}
             <Text style={styles.castName}>{item.person.name}</Text>
-          </View>
+          </TouchableOpacity>
         );
       }}
       keyExtractor={item => `cast${item.person.id}`}

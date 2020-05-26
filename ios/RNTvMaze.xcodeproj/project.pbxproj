@@ -32,6 +32,11 @@
 		B2B3404C2F164C2F8C79BCF6 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FA8D609FBD034BCDB17DA99A /* Octicons.ttf */; };
 		E7B083B49DD5497092741EEC /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 11F764ED6640413BAFF08504 /* SimpleLineIcons.ttf */; };
 		92A37FB31E544A26B4A052D5 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C45A7B5FE56D47BEA176B680 /* Zocial.ttf */; };
+		A151876DEF224F74834EA176 /* OpenSans-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 05AE6F39EE1343A9AEBAD61C /* OpenSans-Bold.ttf */; };
+		E8A67F809E524804B8DCCB03 /* OpenSans-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FF4278DBFC1B492AA121CE1E /* OpenSans-ExtraBold.ttf */; };
+		A4EDA3E412F94861A2964CB7 /* OpenSans-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3D68A6180DA7446296A34CD1 /* OpenSans-Light.ttf */; };
+		D238B9EAFF5E4762B8197B80 /* OpenSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3A782AF9A8AC42D8B6D3D409 /* OpenSans-Regular.ttf */; };
+		8E3770FC37BB44ECBBD29B44 /* OpenSans-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 76BEF85725514F19A07764BB /* OpenSans-SemiBold.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -83,6 +88,11 @@
 		FA8D609FBD034BCDB17DA99A /* Octicons.ttf */ = {isa = PBXFileReference; name = "Octicons.ttf"; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		11F764ED6640413BAFF08504 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; name = "SimpleLineIcons.ttf"; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		C45A7B5FE56D47BEA176B680 /* Zocial.ttf */ = {isa = PBXFileReference; name = "Zocial.ttf"; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		05AE6F39EE1343A9AEBAD61C /* OpenSans-Bold.ttf */ = {isa = PBXFileReference; name = "OpenSans-Bold.ttf"; path = "../assets/fonts/OpenSans-Bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		FF4278DBFC1B492AA121CE1E /* OpenSans-ExtraBold.ttf */ = {isa = PBXFileReference; name = "OpenSans-ExtraBold.ttf"; path = "../assets/fonts/OpenSans-ExtraBold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		3D68A6180DA7446296A34CD1 /* OpenSans-Light.ttf */ = {isa = PBXFileReference; name = "OpenSans-Light.ttf"; path = "../assets/fonts/OpenSans-Light.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		3A782AF9A8AC42D8B6D3D409 /* OpenSans-Regular.ttf */ = {isa = PBXFileReference; name = "OpenSans-Regular.ttf"; path = "../assets/fonts/OpenSans-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		76BEF85725514F19A07764BB /* OpenSans-SemiBold.ttf */ = {isa = PBXFileReference; name = "OpenSans-SemiBold.ttf"; path = "../assets/fonts/OpenSans-SemiBold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -209,6 +219,11 @@
 				FA8D609FBD034BCDB17DA99A /* Octicons.ttf */,
 				11F764ED6640413BAFF08504 /* SimpleLineIcons.ttf */,
 				C45A7B5FE56D47BEA176B680 /* Zocial.ttf */,
+				05AE6F39EE1343A9AEBAD61C /* OpenSans-Bold.ttf */,
+				FF4278DBFC1B492AA121CE1E /* OpenSans-ExtraBold.ttf */,
+				3D68A6180DA7446296A34CD1 /* OpenSans-Light.ttf */,
+				3A782AF9A8AC42D8B6D3D409 /* OpenSans-Regular.ttf */,
+				76BEF85725514F19A07764BB /* OpenSans-SemiBold.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -368,6 +383,11 @@
 				B2B3404C2F164C2F8C79BCF6 /* Octicons.ttf in Resources */,
 				E7B083B49DD5497092741EEC /* SimpleLineIcons.ttf in Resources */,
 				92A37FB31E544A26B4A052D5 /* Zocial.ttf in Resources */,
+				A151876DEF224F74834EA176 /* OpenSans-Bold.ttf in Resources */,
+				E8A67F809E524804B8DCCB03 /* OpenSans-ExtraBold.ttf in Resources */,
+				A4EDA3E412F94861A2964CB7 /* OpenSans-Light.ttf in Resources */,
+				D238B9EAFF5E4762B8197B80 /* OpenSans-Regular.ttf in Resources */,
+				8E3770FC37BB44ECBBD29B44 /* OpenSans-SemiBold.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

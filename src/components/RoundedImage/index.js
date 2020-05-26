@@ -14,21 +14,23 @@ const RoundedImage = ({...props}) => {
 
   let picture = (
     <View
-      style={{
-        width: 85,
-        height: 120,
-        borderRadius: 16,
-        backgroundColor: theme.colors.white,
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}>
+      style={[
+        styles.rounded,
+        {
+          width: 85,
+          height: 120,
+          backgroundColor: theme.colors.white,
+          alignItems: 'center',
+          justifyContent: 'center',
+        },
+      ]}>
       <Text>No Image</Text>
     </View>
   );
   if (image) {
     picture = (
       <CacheableImage
-        style={{width: 85, height: 120, borderRadius: 16}}
+        style={[styles.rounded, {width: 85, height: 120}]}
         source={{uri: image}}
         permanent={false}
       />
@@ -36,7 +38,7 @@ const RoundedImage = ({...props}) => {
   }
   return (
     <View style={[styles.container, {...props}]}>
-      <View style={styles.rounded}>{picture}</View>
+      <View>{picture}</View>
     </View>
   );
 };

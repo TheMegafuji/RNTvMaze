@@ -4,7 +4,7 @@ import {BackHandler, View} from 'react-native';
 import {styles} from './styles';
 import theme from '../../themes/default';
 import {Searchbar} from 'react-native-paper';
-import MovieList from '../../components/MovieList';
+import EntityList from '../../components/EntityList';
 
 const Home = ({navigation}) => {
   const {state, actions} = useContext();
@@ -74,7 +74,7 @@ const Home = ({navigation}) => {
         onChangeText={changeSearchTerm}
         value={searchTerm}
       />
-      <MovieList
+      <EntityList
         content={state.app.content}
         loading={state.app.loading}
         goToDetails={goToDetails}

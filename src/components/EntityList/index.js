@@ -1,19 +1,25 @@
 import theme from '../../themes/default';
 import {FlatList, TouchableOpacity, View, Dimensions, Text} from 'react-native';
-import MovieItem from '../MovieItem';
+import EntityItem from '../EntityItem';
 import React from 'react';
 import {styles} from './styles';
 import {ActivityIndicator} from 'react-native-paper';
 const screen = Dimensions.get('window');
 
-const MovieList = ({content, goToDetails, requestPage, loading}) => {
+const EntityList = ({
+  content,
+  goToDetails,
+  requestPage,
+  loading,
+  people = false,
+}) => {
   const onRefresh = () => {
     requestPage();
   };
 
   const renderFooter = () => {
     const rows = (content.length + (content.length % 2)) / 2;
-    const fillArea = screen.height - rows * 200 - 190;
+    const fillArea = screen.height - rows * 140 - 180;
     return content.length == 0 ? (
       <View
         style={{
@@ -23,13 +29,13 @@ const MovieList = ({content, goToDetails, requestPage, loading}) => {
         <Text style={styles.title}>No results</Text>
       </View>
     ) : (
-      <View style={{margin: fillArea > 0 ? fillArea : 72}} />
+      <View style={{margin: fillArea > 0 ? fillArea : 96}} />
     );
   };
 
   return loading ? (
     <ActivityIndicator
-      style={{marginBottom: screen.height}}
+      style={{marginTop: 10, marginBottom: screen.height}}
       animating={true}
       color={theme.colors.red_primary}
     />
@@ -37,13 +43,15 @@ const MovieList = ({content, goToDetails, requestPage, loading}) => {
     <FlatList
       showsHorizontalScrollIndicator={false}
       data={content}
-      numColumns={2}
+      numColumns={people ? 1 : 2}
       style={{backgroundColor: theme.colors.dark_background}}
       contentInset={{paddingBottom: 80}}
       ListFooterComponent={() => renderFooter()}
       onEndReachedThreshold={0.5}
-      onEndReached={() => onRefresh()}
-      keyExtractor={item => `K${item.id}`}
+      onEndReached={() => {
+        !people && onRefresh();
+      }}
+      keyExtractor={item => `K${(people ? 'P' : '') + item.id}`}
       renderItem={({item}) => (
         <TouchableOpacity
           style={{
@@ -51,13 +59,14 @@ const MovieList = ({content, goToDetails, requestPage, loading}) => {
             margin: 16,
             borderWidth: 0,
           }}
-          key={`TO-${item.id}`}
+          key={`TO-${(people ? 'P' : '') + item.id}`}
           onPress={() => goToDetails(item)}>
-          <MovieItem
+          <EntityItem
             style={{alignSelf: 'center'}}
             key={item.id}
-            title={item.name}
+            item={item}
             image={item.image != null && item.image.medium}
+            people={people}
           />
         </TouchableOpacity>
       )}
@@ -65,4 +74,4 @@ const MovieList = ({content, goToDetails, requestPage, loading}) => {
   );
 };
 
-export default MovieList;
+export default EntityList;

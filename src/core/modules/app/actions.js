@@ -152,7 +152,7 @@ export default dispatch => ({
       type: actionsTypes.GET_FAVORITES_PENDING,
     });
     try {
-      let dbResponse = await repository.allMovies();
+      let dbResponse = await repository.getAllSortName();
       if (!dbResponse) {
         console.log('Nothing in DB');
         dispatch({

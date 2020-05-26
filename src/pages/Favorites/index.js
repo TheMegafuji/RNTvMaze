@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {useContext} from '../../core/_root';
 import {View} from 'react-native';
 import {styles} from './styles';
-import MovieList from '../../components/MovieList';
+import EntityList from '../../components/EntityList';
 import {useIsFocused} from '@react-navigation/native';
 
 const Favorites = ({navigation}) => {
@@ -42,7 +42,7 @@ const Favorites = ({navigation}) => {
 
   return (
     <View style={styles.container}>
-      <MovieList
+      <EntityList
         content={state.app.favorites}
         loading={state.app.favoritesLoading}
         goToDetails={goToDetails}
