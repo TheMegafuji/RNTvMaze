@@ -48,9 +48,30 @@ const removeMovie = async item => {
   return await database.remove(remItem[0], COLLECTION_MOVIES);
 };
 
+function compare(a, b) {
+  const nameA = a.name.toUpperCase();
+  const nameB = b.name.toUpperCase();
+
+  let comparison = 0;
+  if (nameA > nameB) {
+    comparison = 1;
+  } else if (nameA < nameB) {
+    comparison = -1;
+  }
+  return comparison;
+}
+
+const getAllSortName = async () => {
+  const rawData = await database.getAll(COLLECTION_MOVIES);
+
+  const result = rawData.sort(compare);
+  return result;
+};
+
 const repository = {
   allMovies,
   insertMovie,
+  getAllSortName,
   getMovieById,
   getMovieByName,
   removeMovie,

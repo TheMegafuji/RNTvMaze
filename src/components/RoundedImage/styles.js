@@ -3,11 +3,10 @@ import theme from '../../themes/default';
 
 export const styles = StyleSheet.create({
   rounded: {
-    padding: 2,
-    borderRadius: 16,
+    borderTopLeftRadius: 16,
+    borderBottomLeftRadius: 16,
   },
   container: {
-    padding: 8,
     alignItems: 'center',
   },
   font: {
