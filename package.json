@@ -29,7 +29,7 @@
     "pouchdb-react-native": "^6.4.1",
     "pouchdb-upsert": "^2.2.0",
     "react": "16.11.0",
-    "react-native": "0.62.2",
+    "react-native": "0.62.3",
     "react-native-gesture-handler": "^1.6.1",
     "react-native-image-cache-hoc": "^2.0.0",
     "react-native-paper": "^3.10.1",
